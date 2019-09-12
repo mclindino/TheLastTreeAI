@@ -1,0 +1,178 @@
+<html>
+<head>
+    <title>The Last Tree</title>
+    <link href="https://fonts.googleapis.com/css?family=Bevan&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/socket.io.min.js"></script>
+    <style>
+        img {width: 4vw;}
+        table#tabuleiro { border-bottom: saddlebrown 5pt solid; border-top: saddlebrown 5pt solid;
+            font-family: 'Bevan', cursive;
+            font-size: 3vw;
+            text-align: center}
+        table .begin { border-left: saddlebrown 5pt solid; }
+        table .end { border-right: saddlebrown 5pt solid; }
+    </style>
+
+    <script>
+
+        $(document).ready(function () {
+            //connect to the socket server.
+            var socket = io.connect('http://' + document.domain + ':' + location.port + '/socket');
+
+            //receive update signal from server
+            socket.on('update', function (msg) {
+                //update board
+                atualiza();
+            });
+            //receive move signal from server
+            socket.on('move', function (msg) {
+                move(msg.animal,msg.land);
+            });
+            //receive setnum signal from server
+            socket.on('setnum', function (msg) {
+                set_num(msg.element,msg.num);
+            });
+        });
+
+        function set_num(element,num){
+            $(element).html(num);
+        }
+
+        function move(animal,land) {
+            $(animal).appendTo($(land))
+        }
+
+        function atualiza_turno(){
+            $.ajax({
+                url: "/jogador",
+                success: function( result ) {
+                    $("#jogador").html(result);
+                }
+            });
+        }
+
+        function atualiza_movimentos(){
+            $.ajax({
+                url: "/num_movimentos",
+                success: function( result ) {
+                    $("#movimentos").html(result);
+                }
+            });
+        }
+
+        function atualiza_ultima_jogada(){
+            $.ajax({
+                url: "/ultima_jogada",
+                success: function( result ) {
+                    $("#ultima_jogada").html(result);
+                }
+            });
+        }
+
+        function atualiza(){
+            atualiza_turno();
+            atualiza_movimentos();
+            atualiza_ultima_jogada();
+        }
+
+        function reiniciar(){
+            $.ajax({
+                url: "/reiniciar",
+                success: function( result ) {
+                    atualiza();
+                }
+            });
+        }
+
+    </script>
+</head>
+<body>
+
+    <div>
+        <table id="tabuleiro">
+            <tr>
+                <td class="begin" id="land-0-animal-0"></td>
+                <td id="land-0-animal-1"></td>
+                <td id="land-0-animal-2"></td>
+                <td id="land-0-animal-3"></td>
+
+                <td class="begin" id="land-1-animal-0"></td>
+                <td id="land-1-animal-1"></td>
+                <td id="land-1-animal-2"></td>
+                <td id="land-1-animal-3"></td>
+
+                <td class="begin" id="land-2-animal-0"><div id="animal-0"><div id="animal-0-fruits">0</div><img src="static/images/coconutfruit.png"><img src="static/images/bear.png"></div></td>
+                <td id="land-2-animal-1"><div id="animal-1"><div id="animal-1-fruits">0</div><img src="static/images/grapefruit.png"><img src="static/images/wolf.png"></div></td>
+                <td id="land-2-animal-2"><div id="animal-2"><div id="animal-2-fruits">0</div><img src="static/images/tangerinefruit.png"><img src="static/images/bird.png"></div></td>
+                <td id="land-2-animal-3"><div id="animal-3"><div id="animal-3-fruits">0</div><img src="static/images/applefruit.png"><img src="static/images/snake3.png"></div></td>
+
+                <td class="begin" id="land-3-animal-0"></td>
+                <td id="land-3-animal-1"></td>
+                <td id="land-3-animal-2"></td>
+                <td id="land-3-animal-3"></td>
+
+                <td class="begin" id="land-4-animal-0"></td>
+                <td id="land-4-animal-1"></td>
+                <td id="land-4-animal-2"></td>
+                <td class="end" id="land-4-animal-3"></td>
+            </tr>
+            <tr>
+                <td class="begin"><img src="static/images/grapeland.png"><div>0</div></td>
+                <td><img src="static/images/grapeseed.png"><div id="land-0-seeds">0</div></td>
+                <td><img src="static/images/grapeplant.png"><div id="land-0-plants">0</div></td>
+                <td><img src="static/images/grapetree.png"><div id="land-0-trees">0</div></td>
+
+                <td class="begin"><img src="static/images/tangerineland.png"><div>1</div></td>
+                <td><img src="static/images/tangerineseed.png"><div id="land-1-seeds">0</div></td>
+                <td><img src="static/images/tangerineplant.png"><div id="land-1-plants">0</div></td>
+                <td><img src="static/images/tangerinetree.png"><div id="land-1-trees">0</div></td>
+
+                <td class="begin"><img src="static/images/appleland.png"><div>2</div></td>
+                <td><img src="static/images/appleseed.png"><div id="land-2-seeds">0</div></td>
+                <td><img src="static/images/appleplant.png"><div id="land-2-plants">0</div></td>
+                <td><img src="static/images/appletree.png"><div id="land-2-trees">1</div></td>
+
+                <td class="begin"><img src="static/images/bananaland.png"><div>3</div></td>
+                <td><img src="static/images/bananaseed.png"><div id="land-3-seeds">0</div></td>
+                <td><img src="static/images/bananaplant.png"><div id="land-3-plants">0</div></td>
+                <td><img src="static/images/bananatree.png"><div id="land-3-trees">0</div></td>
+
+                <td class="begin"><img src="static/images/coconutland.png"><div>4</div></td>
+                <td><img src="static/images/coconutseed.png"><div id="land-4-seeds">0</div></td>
+                <td><img src="static/images/coconutplant.png"><div id="land-4-plants">0</div></td>
+                <td class="end"><img src="static/images/coconuttree.png"><div id="land-4-trees">0</div></td>
+            </tr>
+        </table>
+    </div>
+    <div style="width:300px;margin-top:50px">
+        <table border="1">
+            <thead>
+            <tr>
+                <td><strong>Turno</strong></td>
+                <td><div id="jogador">1</div></td>
+            </tr>
+            <tr>
+                <td><strong>Status</strong></td>
+                <td><div id="estado">Aguardando movimento</div></td>
+            </tr>
+            <tr>
+                <td><strong>Numero de movimentos</strong></td>
+                <td><div id="movimentos">0</div></td>
+            </tr>
+            <tr>
+                <td><strong>Ultima jogada</strong></td>
+                <td><div id="ultima_jogada">()</div></td>
+            </tr>
+
+            </thead>
+        </table>
+        <input type="button" value="Atualizar" style="margin-top:20px" onClick="atualiza();">
+        <input type="button" value="Reiniciar" style="margin-top:20px" onClick="reiniciar();">
+    </div>
+</div>
+
+
+
+</body>
+</html>
