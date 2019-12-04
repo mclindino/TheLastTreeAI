@@ -1,0 +1,80 @@
+rules
+
+= 10 (5 frutas em 1 animal)
+    se tem arvore:
+        colhe
+    se nao tem arvore e tem muda
+        fertilizar
+        se nao tem muda e tem semente
+            plantar
+            se nao tem semente e tem frutas
+                comer
+                se n tem fruta
+                    prioriza mover para planta/muda/semente
+    
+
+
+= 11 (Todos os lugares tem a mesma quantidade de arvores)
+    se tem arvore e se tem fruta
+        move
+    se nao tem arvore 
+        se tem fruta
+            come
+        se tem semente 
+            planta
+        se tem muda
+            fertilizar
+    se nao tem fruta
+        colhe
+
+
+= 12 (Mesma quantidade de elementos)
+    se tem arvore
+        colhe
+        se tem fruta
+            planta
+        se tem muda
+            fertiliza
+    se nao tem arvore
+        e n tem fruta
+            move para onde tem arvore/semente/muda
+        se tem fruta
+            planta
+        se tem muda
+            fertiliza 
+
+
+= 13 (Todos os animais estao no mesmo lugar com a mesma quantidade de frutas e arvore)
+    se tem arvore
+        mover geral para lugar
+        se geral ta la 
+            colher cada um
+    se nao tem arvore
+        colhe/come/planta/fertiliza
+
+= 14 (1 animal em um lugar sem planta, com vizinhos com a mesma quantidade de planta)
+
+= 15 (todos os terrenos tem semente)
+    se tem semente
+        move
+    se nao tem
+        se tem fruta
+            come
+        se nao tem fruta
+            se tem arvore
+                colhe
+            se nao tem arvore
+                se tem muda
+                    fertiliza
+
+= 16 (todos os animais tem quantidade diferente de frutas)
+    3 frutas
+    
+    2 frutas
+    
+    1 fruta
+    
+    0 fruta
+= 17 (todos animais estao em um terreno com 4 ou mais arvores)
+    tenta criar arvore
+    mover geral

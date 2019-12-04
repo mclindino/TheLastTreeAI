@@ -34,6 +34,28 @@ class Game:
 	last_land = 0
 	previous_land = 0
 
+	def init_board_def(self, numplayers, A, L, g1, g2):
+		self.NUMGOALS = 8
+		self.NUMPLAYERS = numplayers
+		self.animals = A
+		self.lands = L
+		availableGoals = []
+		for g in range(self.NUMGOALS):
+			availableGoals.append(10+g)
+		random.shuffle(availableGoals)
+		self.goals = []
+		# Mudar o goals
+		self.goals.append(g1)
+		self.goals.append(g2)
+		#self.goals.extend(availableGoals[0:self.NUMPLAYERS])
+		self.player = 0
+		self.ended = False
+		self.movements = 0
+		self.last_rule = 0
+		self.last_animal = 0
+		self.last_land = 0
+		self.previous_land = 0
+
     # Initialize the board.
 	def init_board(self,numplayers):
 		self.NUMGOALS = 8
@@ -54,7 +76,7 @@ class Game:
 		self.last_land = 0
 		self.previous_land = 0
 
-	def get_info(self, info, num):
+	def get_info(self, infoID, num):
 		if infoID=='land': #which land the animal[num] is at?
 			return self.animals[num].land
 		elif infoID=='fruit': #how much fruits does the animal[num] have?
@@ -246,7 +268,7 @@ class Game:
 
 	def take_turn(self):
 		self.player = (self.player+1)%self.NUMPLAYERS
-	        return self.player
+		return self.player
 
 	def setposition(self, animal, land):
 		self.animals[animal].land = land
@@ -269,14 +291,14 @@ class Game:
 		socketio.emit('setnum', {'element': '#land-' + str(land) + '-trees', 'num' : self.lands[land].trees}, namespace='/socket')
 
 	def make_move(self, player, rule, animal, land):
-	        if self.ended:
-	            return (-1, "Game is over")
+		if self.ended:
+			return (-1, "Game is over")
 
-	        if player != self.player:
-	            return (-2, "Not your turn")
+		if player != self.player:
+			return (-2, "Not your turn")
 
-	        if self.preview_move(player,rule,animal,land) == None:
-	            return (-3, "Invalid move")
+		if self.preview_move(player,rule,animal,land) == None:
+			return (-3, "Invalid move")
 
 		if rule == 0: #move (displace an animal to an adjacent land)
 			self.previous_land = land
@@ -296,18 +318,18 @@ class Game:
 		elif rule == 5: #devour (destroy 2 fruits)
 			self.addfruit(animal,-2)
 		elif rule >= 10 and rule <= self.NUMGOALS+9: #self.goals
-	            	self.ended = True
+			self.ended = True
 			self.player = -1
-	            	return (0, "%d wins" % player)
+			return (0, "%d wins" % player)
 
-	        self.last_rule = rule
-	        self.last_animal = animal
-	        self.last_land = land
+		self.last_rule = rule
+		self.last_animal = animal
+		self.last_land = land
 
-	        self.movements += 1
+		self.movements += 1
 		self.take_turn()
 
-	        return (1, "Successful Move")
+		return (1, "Successful Move")
 
 
 ###### SERVER ######
@@ -318,7 +340,7 @@ game.init_board(2)
 
 @app.route("/minhavez")
 def minhavez():
-	player = int(q['player'][0])
+	player = int(['player'][0])
     
 	if request.args.get('format') == "json":
 		if game.player != player:
@@ -344,13 +366,39 @@ def jogador():
 		else:
 			return str(game.player)
 
+@app.route("/goals")
+def goal():
+	player = int(request.args.get('player'))
+	if request.args.get('format') == "json":
+		return jsonify((game.goals[player]))
+	else:
+		return str(game.goals[player])
 
 @app.route("/tabuleiro")
 def tabuleiro():
 	if request.args.get('format') == "json":
 		return jsonify((game.animals,game.lands))
 	else:
-		return str((game.animals,game.lands))
+		# Modificar este retorno
+		return str(list(game.animals))
+		# return str((game.animals,game.lands))
+
+@app.route("/tab")
+def tab():
+	if request.args.get('format') == "json":
+		return jsonify((game.animals,game.lands))
+	else:
+		aux = []
+		for i in range(len(game.animals)):
+			aux.append(game.animals[i].fruits)
+			aux.append(game.animals[i].land)
+		for i in range(len(game.lands)):
+			aux.append(game.lands[i].plants)
+			aux.append(game.lands[i].seeds)
+			aux.append(game.lands[i].trees)
+		# Modificar este retorno
+		return str(aux)
+		# return str((game.animals,game.lands))
         
 
 @app.route("/movimentos")
@@ -377,6 +425,12 @@ def ultima_jogada():
 	else:
 		return str((game.last_rule, game.last_animal, game.last_land))
 
+@app.route("/prev_land")
+def prev_land():
+	if request.args.get('format') == "json":
+		return jsonify((game.previous_land))
+	else:
+		return str((game.previous_land))
 
 @app.route("/reiniciar")
 def reiniciar():
