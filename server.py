@@ -21,7 +21,7 @@ class Land:
 		self.trees = trees
 
 class Game:
-	NUMGOALS = 8
+	NUMGOALS = 4
 	NUMPLAYERS = 2
 	animals = []
 	lands = []
@@ -35,13 +35,16 @@ class Game:
 	previous_land = 0
 
 	def init_board_def(self, numplayers, A, L, g1, g2):
-		self.NUMGOALS = 8
+		self.NUMGOALS = 4
 		self.NUMPLAYERS = numplayers
 		self.animals = A
 		self.lands = L
 		availableGoals = []
-		for g in range(self.NUMGOALS):
-			availableGoals.append(10+g)
+		#for g in range(self.NUMGOALS):
+		availableGoals.append(12)
+		availableGoals.append(14)
+		availableGoals.append(16)
+		availableGoals.append(17)
 		random.shuffle(availableGoals)
 		self.goals = []
 		# Mudar o goals
@@ -58,13 +61,15 @@ class Game:
 
     # Initialize the board.
 	def init_board(self,numplayers):
-		self.NUMGOALS = 8
+		self.NUMGOALS = 4
 		self.NUMPLAYERS = numplayers
 		self.animals = [Animal(),Animal(),Animal(),Animal()]
 		self.lands = [Land(0),Land(0),Land(1),Land(0),Land(0)]
 		availableGoals = []
-		for g in range(self.NUMGOALS):
-			availableGoals.append(10+g)
+		availableGoals.append(12)
+		availableGoals.append(14)
+		availableGoals.append(16)
+		availableGoals.append(17)
 		random.shuffle(availableGoals)
 		self.goals = []
 		self.goals.extend(availableGoals[0:self.NUMPLAYERS])
@@ -145,25 +150,25 @@ class Game:
 				return self.preview_board([('fruit',animal,self.animals[animal].fruits-2)])
 			else:
 				return None # (-3.2, "Invalid move, not enough fruits")
-		elif rule == 10: #the fruit king (an animal with 5+ fruits is the only one with fruits)
-			if self.goals[player] == rule:
-				if self.animals[animal].fruits > 4:
-					if self.animals[animal].fruits == self.animals[0].fruits+self.animals[1].fruits+self.animals[2].fruits+self.animals[3].fruits:
-	            				return (self.animals,self.lands)
-					else:
-						return None # (-3.8, "Invalid move, too much fruits")
-				else:
-					return None # (-3.2, "Invalid move, not enough fruits")
-			else:
-				return None # (-4, "Not your goal")
-		elif rule == 11: #grove symmetry (all self.lands have the same amount of trees)
-			if self.goals[player] == rule:
-				if self.lands[0].trees==self.lands[1].trees and self.lands[0].trees==self.lands[2].trees and self.lands[0].trees==self.lands[3].trees and self.lands[0].trees==self.lands[4].trees:
-					return (self.animals,self.lands)
-				else:
-					return None # (-3.6, "Invalid move, all numbers should be equal")
-			else:
-				return None # (-4, "Not your goal")
+		# elif rule == 10: #the fruit king (an animal with 5+ fruits is the only one with fruits)
+		# 	if self.goals[player] == rule:
+		# 		if self.animals[animal].fruits > 4:
+		# 			if self.animals[animal].fruits == self.animals[0].fruits+self.animals[1].fruits+self.animals[2].fruits+self.animals[3].fruits:
+	    #         				return (self.animals,self.lands)
+		# 			else:
+		# 				return None # (-3.8, "Invalid move, too much fruits")
+		# 		else:
+		# 			return None # (-3.2, "Invalid move, not enough fruits")
+		# 	else:
+		# 		return None # (-4, "Not your goal")
+		# elif rule == 11: #grove symmetry (all self.lands have the same amount of trees)
+		# 	if self.goals[player] == rule:
+		# 		if self.lands[0].trees==self.lands[1].trees and self.lands[0].trees==self.lands[2].trees and self.lands[0].trees==self.lands[3].trees and self.lands[0].trees==self.lands[4].trees:
+		# 			return (self.animals,self.lands)
+		# 		else:
+		# 			return None # (-3.6, "Invalid move, all numbers should be equal")
+		# 	else:
+		# 		return None # (-4, "Not your goal")
 		elif rule == 12: #ecosystem (the same amount (>0) of fruits, seeds, plants and trees in one place/animal)
 			if self.goals[player] == rule:
 				if self.animals[animal].fruits == self.lands[self.animals[animal].land].plants and self.animals[animal].fruits == self.lands[self.animals[animal].land].seeds and self.animals[animal].fruits == self.lands[self.animals[animal].land].trees:
@@ -175,14 +180,14 @@ class Game:
 					return None # (-3.6, "Invalid move, all numbers should be equal")
 			else:
 				return None # (-4, "Not your goal")
-		elif rule == 13: #orchard (all self.animals are in self.lands with as much trees as their fruits)
-			if self.goals[player] == rule:
-				if self.animals[0].fruits==self.lands[self.animals[0].land].trees and self.animals[1].fruits==self.lands[self.animals[1].land].trees and self.animals[2].fruits==self.lands[self.animals[2].land].trees and self.animals[3].fruits==self.lands[self.animals[3].land].trees:
-	            			return (self.animals,self.lands)
-				else:
-					return None # (-3.6, "Invalid move, all numbers should be equal")
-			else:
-				return None # (-4, "Not your goal")
+		# elif rule == 13: #orchard (all self.animals are in self.lands with as much trees as their fruits)
+		# 	if self.goals[player] == rule:
+		# 		if self.animals[0].fruits==self.lands[self.animals[0].land].trees and self.animals[1].fruits==self.lands[self.animals[1].land].trees and self.animals[2].fruits==self.lands[self.animals[2].land].trees and self.animals[3].fruits==self.lands[self.animals[3].land].trees:
+	    #         			return (self.animals,self.lands)
+		# 		else:
+		# 			return None # (-3.6, "Invalid move, all numbers should be equal")
+		# 	else:
+		# 		return None # (-4, "Not your goal")
 		elif rule == 14: #plant valley (an animal at a land with no plants that is between adjacent self.lands with the same amount of plants >0)
 			if self.goals[player] == rule:
 				if self.lands[self.animals[animal].land].plants == 0:
@@ -200,14 +205,14 @@ class Game:
 					return None # (-3.8, "Invalid move, too much fruits")
 			else:
 				return None # (-4, "Not your goal")
-		elif rule == 15: #chicken farm (all self.lands have seeds)
-			if self.goals[player] == rule:
-				if self.lands[0].seeds > 0 and self.lands[1].seeds > 0 and self.lands[2].seeds > 0 and self.lands[3].seeds > 0 and self.lands[4].seeds > 0:
-        	    			return (self.animals,self.lands)
-				else:
-					return None # (-3.3, "Invalid move, not enough seeds")
-			else:
-				return None # (-4, "Not your goal")
+		# elif rule == 15: #chicken farm (all self.lands have seeds)
+		# 	if self.goals[player] == rule:
+		# 		if self.lands[0].seeds > 0 and self.lands[1].seeds > 0 and self.lands[2].seeds > 0 and self.lands[3].seeds > 0 and self.lands[4].seeds > 0:
+        # 	    			return (self.animals,self.lands)
+		# 		else:
+		# 			return None # (-3.3, "Invalid move, not enough seeds")
+		# 	else:
+		# 		return None # (-4, "Not your goal")
 		elif rule == 16: #jungle hierarchy (all self.animals have different numbers of fruits)
 			if self.goals[player] == rule:
 				if self.animals[0].fruits != self.animals[1].fruits and self.animals[0].fruits != self.animals[2].fruits and self.animals[0].fruits != self.animals[3].fruits and self.animals[1].fruits != self.animals[2].fruits and self.animals[1].fruits != self.animals[3].fruits and self.animals[2].fruits != self.animals[3].fruits:
@@ -376,12 +381,13 @@ def goal():
 
 @app.route("/tabuleiro")
 def tabuleiro():
+	print('aqui')
 	if request.args.get('format') == "json":
 		return jsonify((game.animals,game.lands))
 	else:
 		# Modificar este retorno
 		return str(list(game.animals))
-		# return str((game.animals,game.lands))
+	    #return str((game.animals,game.lands))
 
 @app.route("/tab")
 def tab():

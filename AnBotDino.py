@@ -1,3 +1,4 @@
+
 import urllib.request
 import sys
 import time
@@ -59,41 +60,7 @@ def avaliation(objetivo, movimento):
 
     score = 0
 
-    if objetivo == 10:
-        score += simulated_game.animals[animal].fruits * 2
-        if simulated_game.lands[land].trees >= 1:
-            score += 2
-            if rule == 1:
-                score += 2
-            else:
-                score += 1
-        else:
-            if rule == 4:
-                score += 2
-            else:
-                score += 1
-        
-        return score
-    
-    elif objetivo == 11:
-        if simulated_game.lands[land].trees > 0:
-            if simulated_game.animals[animal].fruits > 0:
-                if rule == 0:
-                    score += 2
-                else:
-                    score += 1
-            else:
-                if rule == 1:
-                    score += 2
-                else:
-                    score += 1
-        else:
-            if rule != 5:
-                score += rule / 2
-        
-        return score
-    
-    elif objetivo == 12:
+    if objetivo == 12:
         quantity = simulated_game.lands[land].trees
         if simulated_game.lands[land].trees > 0:
             if simulated_game.lands[land].plants == quantity:
@@ -117,24 +84,6 @@ def avaliation(objetivo, movimento):
         else:
             score += 1
 
-        return score
-    
-    elif objetivo == 13:
-        if rule == 1:
-            for animal1 in simulated_game.animals:
-                if simulated_game.lands[animal1.land].trees == (animal1.fruits + 1):
-                    score += 3
-                else:
-                    score += 1
-            
-        if rule == 4:
-            for land1 in simulated_game.lands:
-                if simulated_game.animals[animal].fruits == (land1.trees + 1):
-                    score += 3
-                else:
-                    score += 1
-        return score
-
     elif objetivo == 14:
         quantityTrees = simulated_game.lands[land].trees
         quantityFruits = simulated_game.animals[animal].fruits
@@ -148,17 +97,6 @@ def avaliation(objetivo, movimento):
                     score += 3
         if (rule != 5) or (rule != 1):
             score += 1
-        return score
-        
-    elif objetivo == 15:
-        if rule == 2:
-            if simulated_game.lands[land].seeds <= 0:
-                score += 3
-            else:
-                score += 1
-        if rule != 3:
-            score += 2
-        return score
 
     elif objetivo == 16:
         currentFruits = simulated_game.animals[animal].fruits
@@ -168,7 +106,6 @@ def avaliation(objetivo, movimento):
                     score += 2
                 else:
                     score += 1
-        return score
 
     elif objetivo == 17:
         trees = simulated_game.lands[land].trees
@@ -177,7 +114,8 @@ def avaliation(objetivo, movimento):
         for animal1 in simulated_game.animals:
             if land == animal1.land:
                 score += 2
-        return score
+    
+    return score
         
 if len(sys.argv)==1:
     print("Voce deve especificar o numero do jogador (0 ou 1)\n\nExemplo:    ./random_client.py 0")
