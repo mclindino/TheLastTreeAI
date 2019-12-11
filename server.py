@@ -381,7 +381,6 @@ def goal():
 
 @app.route("/tabuleiro")
 def tabuleiro():
-	print('aqui')
 	if request.args.get('format') == "json":
 		return jsonify((game.animals,game.lands))
 	else:
