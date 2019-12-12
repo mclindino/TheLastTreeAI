@@ -118,6 +118,7 @@ def heuristics(board, goal, moviment):
                 if rule < 5:
                     score += 10
 
+        #score = 10000
     return score
 
 class tree:
@@ -153,7 +154,23 @@ class tree:
     def setScore(self, score):
         self.score = score
 
+    def getScore(self):
+    	return self.score
+
 def calculateMinimax(tree, board, goal):
-    for moviments in tree.getChildren():
-        moviments.setScore(heuristics(board, goal, moviments.moviment))
+	_max_ = -1000
+	_min_ = 1000
+	for moviments in tree.getChildren():
+		for movimentsOpponent in moviments.getChildren():
+			for movimentsPlayer in movimentsOpponent.getChildren():
+				movimentsPlayer.setScore(heuristics(board, goal, movimentsPlayer.moviment))
+				#print(movimentsPlayer.getScore())
+				if movimentsPlayer.getScore() < _min_:
+					_min_ = movimentsPlayer.getScore()
+			movimentsOpponent.setScore(_min_)
+			#print(movimentsOpponent.getScore())
+			if movimentsOpponent.getScore() > _max_:
+				_max_ = movimentsOpponent.getScore()
+		moviments.setScore(_max_)
+		#print(moviments.getScore())
 #def completeTree(moviment):
